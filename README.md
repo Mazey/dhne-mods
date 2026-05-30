@@ -17,7 +17,7 @@ After installing Lovely, run the game once. Verify it installed correctly as des
 
 Download and extract the mod.
 
-Navigate to %AppData%/Roaming (Windows) or equivalent on your system. You'll see 2 folders, `dice-have-no-eyes` and `dice_have_no_eyes`.
+Navigate to `%AppData%/Roaming` (Windows) or equivalent on your system. You'll see 2 folders, `dice-have-no-eyes` and `dice_have_no_eyes`.
 
 To install the mod now follow these steps
 1. Navigate to `dice-have-no-eyes/Mods/`, create a folder `ccreator` and inside, you'll want to place `lovely.toml` which you've downloaded as part of the mod.
