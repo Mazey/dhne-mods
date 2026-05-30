@@ -1,0 +1,131 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+
+[[patches]]
+[patches.pattern]
+target = "src/characters/init.lua"
+
+pattern = "return characters"
+
+position = "before"
+
+payload = '''
+local mod_char_dir = "Mods/customcharacters/characters"
+local character_base = require("Mods.customcharacters.src.character_base")
+print("loading mod characters", mod_char_dir)
+for _, v in ipairs(love.filesystem.getDirectoryItems(mod_char_dir)) do
+	local filename = v
+    if filename:match("%.lua$") then
+        local module_name = filename:match("^(.*)%.lua$")
+		print("adding character", module_name)
+
+		local character_custom = {}
+		for k, v in pairs(character_base) do
+			character_custom[k] = v
+		end
+
+		local character_input = require(mod_char_dir:gsub("/", ".") .. "." .. module_name)
+
+		character_custom.name = character_input.name
+		character_custom.body_sprite = mod_char_dir .. "/" .. module_name .. ".png"
+
+		if not love.filesystem.getInfo(character_custom.body_sprite) then
+			character_custom.body_sprite =
+				"Mods/customcharacters/assets/custom.png"
+		end
+
+		character_custom.starting_coins = character_input.starting_coins
+		character_custom.turns = character_input.turns
+		character_custom.busts = character_input.busts
+		character_custom.power = character_input.power_type
+		character_custom.power_cost = character_input.power_cost
+		character_custom.power_limit = character_input.power_limit
+		character_custom.dice_limit = character_input.dice_limit
+		character_custom.dice = character_input.dice
+		character_custom.dialogue_text = character_input.dialogue_text
+
+		characters[module_name] = character_custom
+    end
+end
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "src/states/game_setup.lua"
+
+pattern = '''
+	local character_select = self.k:add_from_system("ui", {
+		k = self.k,
+		pos = vec2(display:dimensions_scaled()):smuli(0.5, 0.5),
+		characters = sequence({
+			"liz",
+			"king_fetus",
+			"wizard",
+			"shirin",
+			"guy",
+			"anais",
+			-- "dog",
+			-- "hotdog",
+		}):map(function(v)
+'''
+
+position = "at"
+
+payload = '''
+	local _c = {
+		"liz",
+		"king_fetus",
+		"wizard",
+		"shirin",
+		"guy",
+		"anais"
+	}
+
+	for _, filename in ipairs(love.filesystem.getDirectoryItems("Mods/customcharacters/characters")) do
+		local module_name = filename:match("^(.*)%.lua$")
+		if module_name then
+			table.insert(_c, module_name)
+		end
+	end
+
+	local character_select = self.k:add_from_system("ui", {
+		k = self.k,
+		pos = vec2(display:dimensions_scaled()):smuli(0.5, 0.5),
+		characters = sequence(_c):map(function(v)
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "src/entities/power_ui.lua"
+
+pattern = "local charge_cost = btn and (btn.power.charge_cost or 1) or 1"
+
+position = "at"
+
+payload = "local charge_cost = btn and (state.character.power_cost or (btn.power.charge_cost or 1)) or 1"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "src/entities/power_ui.lua"
+
+pattern = "local cost = self.power.charge_cost or 1"
+
+position = "at"
+
+payload = "local cost = (state.character.power_cost or self.power.charge_cost) or 1"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "src/entities/power_ui.lua"
+
+pattern = "e.power:use_charge(self.power.charge_cost or 1)"
+
+position = "at"
+
+payload = "e.power:use_charge((state.character.power_cost or self.power.charge_cost) or 1)"
+match_indent = true
