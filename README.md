@@ -45,6 +45,7 @@ To install a character, simply follow step 3 and optionally step 4, if artwork i
 
 You should have something like below, where you place characers next to super_liz.lua
 
+```
 dice_have_no_eyes/
 ├─ Mods/
 │  ├─ customcharacters/
@@ -56,3 +57,4 @@ dice-have-no-eyes/
 ├─ Mods/
 │  ├─ customcharacters/
 │  │  ├─ lovely.toml
+```
