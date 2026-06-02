@@ -11,10 +11,13 @@ pattern = "return characters"
 position = "before"
 
 payload = '''
-local mod_char_dir = "Mods/customcharacters/characters"
+local mod_dir = "Mods/customcharacters"
+local mod_char_dir = "/characters"
+local mod_asset_dir = "/assets"
+
 local character_base = require("Mods.customcharacters.src.character_base")
-print("loading mod characters", mod_char_dir)
-for _, v in ipairs(love.filesystem.getDirectoryItems(mod_char_dir)) do
+print("loading mod characters", mod_dir .. mod_char_dir)
+for _, v in ipairs(love.filesystem.getDirectoryItems(mod_dir .. mod_char_dir)) do
 	local filename = v
     if filename:match("%.lua$") then
         local module_name = filename:match("^(.*)%.lua$")
@@ -25,14 +28,14 @@ for _, v in ipairs(love.filesystem.getDirectoryItems(mod_char_dir)) do
 			character_custom[k] = v
 		end
 
-		local character_input = require(mod_char_dir:gsub("/", ".") .. "." .. module_name)
+		local character_input = require((mod_dir .. mod_char_dir):gsub("/", ".") .. "." .. module_name)
 
 		character_custom.name = character_input.name
-		character_custom.body_sprite = mod_char_dir .. "/" .. module_name .. ".png"
+		character_custom.body_sprite = mod_dir .. mod_asset_dir .. "/" .. module_name .. ".png"
 
 		if not love.filesystem.getInfo(character_custom.body_sprite) then
 			character_custom.body_sprite =
-				"Mods/customcharacters/assets/custom.png"
+				mod_dir .. mod_asset_dir .. "/custom.png"
 		end
 
 		character_custom.starting_coins = character_input.starting_coins

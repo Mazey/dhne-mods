@@ -39,3 +39,20 @@ To create a character:
 4. (optional) there is a stock dice image for custom characters, if you want a custom artwork, you can place it in `dice_have_no_eyes/Mods/customcharacters/assets`. It should have the same name as your character file but `.png` instead of `.lua`.
 
 To install a character, simply follow step 3 and optionally step 4, if artwork is also provided.
+
+
+### Final setup
+
+You should have something like below, where you place characers next to super_liz.lua
+
+dice_have_no_eyes/
+├─ Mods/
+│  ├─ customcharacters/
+│  │  ├─ assets/
+│  │  ├─ characters/
+│  │  │  ├─ super_liz.lua
+│  │  ├─ src/
+dice-have-no-eyes/
+├─ Mods/
+│  ├─ customcharacters/
+│  │  ├─ lovely.toml
