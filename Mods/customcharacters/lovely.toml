@@ -69,8 +69,11 @@ pattern = '''
 			"shirin",
 			"guy",
 			"anais",
-			-- "dog",
-			-- "hotdog",
+			"dog",
+			"hotdog",
+			"cool_fish",
+			"business_fish",
+			"tooth_fairy",
 		}):map(function(v)
 '''
 
@@ -78,12 +81,17 @@ position = "at"
 
 payload = '''
 	local _c = {
-		"liz",
-		"king_fetus",
-		"wizard",
-		"shirin",
-		"guy",
-		"anais"
+			"liz",
+			"king_fetus",
+			"wizard",
+			"shirin",
+			"guy",
+			"anais",
+			"dog",
+			"hotdog",
+			"cool_fish",
+			"business_fish",
+			"tooth_fairy"
 	}
 
 	for _, filename in ipairs(love.filesystem.getDirectoryItems("Mods/customcharacters/characters")) do
@@ -104,31 +112,31 @@ match_indent = true
 [patches.pattern]
 target = "src/entities/power_ui.lua"
 
-pattern = "local charge_cost = btn and (btn.power.charge_cost or 1) or 1"
+pattern = "local charge_cost = btn and (btn.charge_cost or 1) or 1"
 
 position = "at"
 
-payload = "local charge_cost = btn and (state.character.power_cost or (btn.power.charge_cost or 1)) or 1"
+payload = "local charge_cost = btn and (state.character.power_cost or (btn.charge_cost or 1)) or 1"
 match_indent = true
 
 [[patches]]
 [patches.pattern]
 target = "src/entities/power_ui.lua"
 
-pattern = "local cost = self.power.charge_cost or 1"
+pattern = "local cost = self.charge_cost or 1"
 
 position = "at"
 
-payload = "local cost = (state.character.power_cost or self.power.charge_cost) or 1"
+payload = "local cost = (state.character.power_cost or self.charge_cost) or 1"
 match_indent = true
 
 [[patches]]
 [patches.pattern]
 target = "src/entities/power_ui.lua"
 
-pattern = "e.power:use_charge(self.power.charge_cost or 1)"
+pattern = "e.power:use_charge(self.charge_cost or 1)"
 
 position = "at"
 
-payload = "e.power:use_charge((state.character.power_cost or self.power.charge_cost) or 1)"
+payload = "e.power:use_charge((state.character.power_cost or self.charge_cost) or 1)"
 match_indent = true
