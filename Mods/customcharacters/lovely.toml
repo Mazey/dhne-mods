@@ -13,7 +13,8 @@ position = "before"
 payload = '''
 local mod_dir = "Mods/customcharacters"
 local mod_char_dir = "/characters"
-local mod_asset_dir = "/assets"
+local mod_sprites_dir = "/assets/sprites"
+local mod_sounds_dir = "/assets/audio"
 
 local character_base = require("Mods.customcharacters.src.character_base")
 print("loading mod characters", mod_dir .. mod_char_dir)
@@ -31,11 +32,25 @@ for _, v in ipairs(love.filesystem.getDirectoryItems(mod_dir .. mod_char_dir)) d
 		local character_input = require((mod_dir .. mod_char_dir):gsub("/", ".") .. "." .. module_name)
 
 		character_custom.name = character_input.name
-		character_custom.body_sprite = mod_dir .. mod_asset_dir .. "/" .. module_name .. ".png"
+		character_custom.body_sprite = mod_dir .. mod_sprites_dir .. "/" .. module_name .. ".png"
 
 		if not love.filesystem.getInfo(character_custom.body_sprite) then
 			character_custom.body_sprite =
-				mod_dir .. mod_asset_dir .. "/custom.png"
+				mod_dir .. mod_sprites_dir .. "/custom.png"
+		end
+
+		local poke_sounds = {}
+		for i = 1, 9 do
+			local poke_sound = mod_dir .. mod_sounds_dir .. "/" .. module_name .. "_poke_" .. i .. ".ogg"
+			print("checking for poke sound", poke_sound)
+			if love.filesystem.getInfo(poke_sound) then
+				print("adding poke sound", poke_sound)
+				table.insert(poke_sounds, module_name .. "_poke_" .. i)
+			end
+		end
+
+		if #poke_sounds > 0 then
+			character_custom.poke_sounds = poke_sounds
 		end
 
 		character_custom.starting_coins = character_input.starting_coins
@@ -105,6 +120,44 @@ payload = '''
 		k = self.k,
 		pos = vec2(display:dimensions_scaled()):smuli(0.5, 0.5),
 		characters = sequence(_c):map(function(v)
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "src/audio/init.lua"
+
+pattern = 'local mix_setup = require("src.audio.mix_setup")'
+
+position = "after"
+
+payload = '''
+	for _, filename in ipairs(love.filesystem.getDirectoryItems("Mods/customcharacters/assets/audio")) do
+		local sound = filename:match("^(.*)%.ogg$")
+		if sound then
+			mix_setup[sound] = {
+				modded = true,
+				filename = "customcharacters/assets/audio/" .. filename,
+				mix = {"sfx", 1},
+			}
+		end
+	end
+
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "src/audio/init.lua"
+
+pattern = '		local source = love.audio.newSource("assets/audio/"..cfg.filename, is_music and "stream" or "static")'
+
+position = "at"
+
+payload = '''
+		local is_modded = cfg.modded or false
+		local path = is_modded and "Mods/" .. cfg.filename or "assets/audio/" .. cfg.filename
+		local source = love.audio.newSource(path, is_music and "stream" or "static")
 '''
 match_indent = true
 
