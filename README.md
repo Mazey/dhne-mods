@@ -36,9 +36,10 @@ To create a character:
 1. Navigate to the [character creator](https://mazey.github.io/dhne/ccreator/).
 2. Create the character as you prefer, and download it using the button at the top right corner.
 3. Place the downloaded file in `dice_have_no_eyes/Mods/customcharacters/characters`.
-4. (optional) there is a stock dice image for custom characters, if you want a custom artwork, you can place it in `dice_have_no_eyes/Mods/customcharacters/assets`. It should have the same name as your character file but `.png` instead of `.lua`.
+4. (optional) there is a stock dice image for custom characters, if you want a custom artwork, you can place it in `dice_have_no_eyes/Mods/customcharacters/assets/sprites`. It should have the same name as your character file but in png format. Example: `Mods/customcharacters/assets/sprites/super_liz.png`
+5. (optional) characters without custom poke sounds will use default poke sounds, if you want a custom poke sounds, you can place up to 9 in `dice_have_no_eyes/Mods/customcharacters/assets/audio`. It should have the same name as your character file, appended with `_poke_` and numbers 1 through 9 and in ogg format. Example: `Mods/customcharacters/assets/audio/` would contain `super_liz_poke_1.ogg`, `super_liz_poke_2.ogg`, `super_liz_poke_3.ogg`
 
-To install a character, simply follow step 3 and optionally step 4, if artwork is also provided.
+To install a character, simply follow step 3 and optionally step 4 and 5, if custom artwork or sounds were provided.
 
 
 ### Final setup
@@ -49,6 +50,12 @@ dice_have_no_eyes/
 ├─ Mods/
 │  ├─ customcharacters/
 │  │  ├─ assets/
+│  │  │  ├─ audio/
+│  │  │  │  ├─ super_liz_poke_1.ogg (optional)
+│  │  │  │  ├─ super_liz_poke_2.ogg (optional)
+│  │  │  │  ├─ super_liz_poke_3.ogg (optional)
+│  │  │  ├─ sprites/
+│  │  │  │  ├─ super_liz.png (optional)
 │  │  ├─ characters/
 │  │  │  ├─ super_liz.lua
 │  │  ├─ src/
